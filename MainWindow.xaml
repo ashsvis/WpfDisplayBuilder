@@ -1,0 +1,426 @@
+﻿<Window x:Class="WpfDisplayBuilder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:local="clr-namespace:WpfDisplayBuilder"
+        Title="Редактор мнемосхем" Height="600" Width="1000" WindowStartupLocation="CenterScreen" 
+        ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded" Icon="images/pict_editor.ico" 
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <Window.Resources>
+        <Style x:Key="MyFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Control}">
+                        <Grid Margin="3 2">
+                            <Rectangle Name="r1" StrokeThickness="1" Stroke="Black" StrokeDashArray="2 2"/>
+                            <Border Name="border" Width="{TemplateBinding ActualWidth}" 
+                                    Height="{TemplateBinding ActualHeight}"  CornerRadius="2" BorderThickness="1" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShadowStyle">
+            <Setter Property="Control.Foreground" Value="LightGray" />
+        </Style>
+
+        <Style x:Key="InformButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="FontSize" Value="11px"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisual}" />
+            <Setter Property="Background" >
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightLightColorKey}}" Offset="0.2"/>
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0.85"/>
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" 
+        				BorderThickness="1"
+        				Padding="3,2" 
+        				BorderBrush="Snow" 
+        				CornerRadius="1" 
+        				Background="{TemplateBinding Background}">
+                            <Grid >
+                                <ContentPresenter HorizontalAlignment="Center" 
+        	                           VerticalAlignment="Center" Name="contentShadow" 
+        					Style="{StaticResource ShadowStyle}">
+                                    <ContentPresenter.RenderTransform>
+                                        <TranslateTransform X="1.0" Y="1.0" />
+                                    </ContentPresenter.RenderTransform>
+                                </ContentPresenter>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" Name="content"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                                <Setter Property="Foreground" Value="#FF4788c8" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" >
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" Offset="0.35"/>
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0.95"/>
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="content" Property="RenderTransform" >
+                                    <Setter.Value>
+                                        <TranslateTransform Y="1.0" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsDefaulted" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF282828" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF282828" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.3" />
+                                <Setter Property="Foreground" Value="Gray" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ToggleButton" TargetType="RadioButton">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="FontSize" Value="11px"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisual}" />
+            <Setter Property="Background" >
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightLightColorKey}}" Offset="0.2"/>
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0.85"/>
+                        <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border Name="border" 
+        				BorderThickness="1"
+        				Padding="3,2" 
+        				BorderBrush="Snow" 
+        				CornerRadius="0" 
+        				Background="{TemplateBinding Background}">
+                            <Grid >
+                                <ContentPresenter HorizontalAlignment="Center" 
+        	                           VerticalAlignment="Center" Name="contentShadow" 
+        					Style="{StaticResource ShadowStyle}">
+                                    <ContentPresenter.RenderTransform>
+                                        <TranslateTransform X="1.0" Y="1.0" />
+                                    </ContentPresenter.RenderTransform>
+                                </ContentPresenter>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" Name="content"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                                <Setter Property="Foreground" Value="#FF4788c8" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#FFBDDCE8" >
+                                </Setter>
+                                <Setter TargetName="content" Property="RenderTransform" >
+                                    <Setter.Value>
+                                        <TranslateTransform Y="1.0" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF282828" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.3" />
+                                <Setter Property="Foreground" Value="Gray" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Height="22" VerticalAlignment="Top" TextOptions.TextFormattingMode="Display" 
+              Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать" HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0">
+                    <MenuItem Header="Новая мнемосхема" HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="CreateSchemeButton_Click"/>
+                    <MenuItem Header="Новая фигура" HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="CreateShapeButton_Click"/>
+                </MenuItem>
+                <MenuItem Header="Открыть..." HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="Load_Click"/>
+                <Separator HorizontalAlignment="Left" Width="148"/>
+                <MenuItem Header="Сохранить" HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="Save_Click"/>
+                <MenuItem Header="Сохранить как..." HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="SaveAs_Click"/>
+                <Separator HorizontalAlignment="Left" Width="148"/>
+                <MenuItem Header="Выход" HorizontalAlignment="Left" Width="Auto" Margin="3,0,0,0" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Настройка"/>
+            <MenuItem Header="Помощь"/>
+        </Menu>
+        <ToolBarTray Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <ToolBar Height="Auto">
+                <Button Style="{StaticResource InformButton}" ToolTip="Создать новую мнемосхему" Click="CreateSchemeButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\blankpage.png"  />
+                </Button>
+                <Button Style="{StaticResource InformButton}" ToolTip="Создать новую фигуру" Click="CreateShapeButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\shapepage.png"  />
+                </Button>
+                <Separator></Separator>
+                <Button Style="{StaticResource InformButton}" ToolTip="Загрузить содержимое" Click="Load_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\open.png"  />
+                </Button>
+                <Button Style="{StaticResource InformButton}" Name="SaveContentButton" IsEnabled="True" ToolTip="Сохранить изменения" Click="Save_Click"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\save.png"  />
+                </Button>
+                <Separator></Separator>
+                <Button Style="{StaticResource InformButton}" Name="PreviewContentButton" ToolTip="Просмотр готовой мнемосхемы"
+                        x:FieldModifier="private" Click="PreviewContentButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\showscheme.png"  />
+                </Button>
+                <Separator></Separator>
+                <StackPanel Orientation="Horizontal">
+                    <Label>Зум:</Label>
+                    <ComboBox Name="ZoomSelector" Width="60" 
+                              VerticalContentAlignment="Center"
+                              x:FieldModifier="private" PreviewKeyDown="ZoomSelector_PreviewKeyDown" />
+                </StackPanel>
+            </ToolBar>
+            <ToolBar>
+                <RadioButton Style="{StaticResource ToggleButton}" Name="ArrowButton" ToolTip="Режим выбора" Click="ArrowButton_Click" IsChecked="True"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\arrow.png" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource ToggleButton}" Name="ZoominButton" ToolTip="Режим увеличения"
+                             x:FieldModifier="private" Click="ZoominButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\zoomin.png" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource ToggleButton}" Name="ZoomoutButton" ToolTip="Режим уменьшения"
+                             x:FieldModifier="private" Click="ZoomoutButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\zoomout.png" />
+                </RadioButton>
+                <RadioButton Visibility="Collapsed" Style="{StaticResource ToggleButton}" Name="RotatorButton" ToolTip="Режим поворота" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\rotator.png" />
+                </RadioButton>
+                <RadioButton Visibility="Collapsed" Style="{StaticResource ToggleButton}" Name="NodeeditButton" ToolTip="Режим изменения узлов" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\nodemove.png" />
+                </RadioButton>
+                <Separator/>
+                <RadioButton Name="AddRectButton" ToolTip="Вставка прямоугольника" Click="AddRectButton_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\rectangle.png" />
+                </RadioButton>
+                <RadioButton Name="AddCircleButton" ToolTip="Вставка эллипса" Click="AddCircleButton_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\ellipse.png" />
+                </RadioButton>
+                <RadioButton Name="AddLineButton" ToolTip="Вставка линии" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\line.png" />
+                </RadioButton>
+                <RadioButton Name="AddPolylineButton" ToolTip="Вставка ломанной линии" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\polyline.png" />
+                </RadioButton>
+                <RadioButton Name="AddPolygoneButton" ToolTip="Вставка многоугольника" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\polygon.png" />
+                </RadioButton>
+                <RadioButton Name="AddBezierButton" ToolTip="Вставка кривой" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\bezier.png" />
+                </RadioButton>
+                <RadioButton Name="AddArcButton" ToolTip="Вставка дуги" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\arc.png" />
+                </RadioButton>
+                <RadioButton Name="AddChordButton" ToolTip="Вставка хорды" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\chord.png" />
+                </RadioButton>
+                <RadioButton Name="AddWedgeButton" ToolTip="Вставка сектора" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\wedge.png" />
+                </RadioButton>
+                <RadioButton Name="AddLabel" ToolTip="Вставка надписи"
+                             x:FieldModifier="private" Click="AddLabel_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\text.png" />
+                </RadioButton>
+                <RadioButton Name="AddTextbox" ToolTip="Вставка текста" Click="AddTextbox_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\textbox.png" />
+                </RadioButton>
+                <RadioButton Name="AddHyperlink" ToolTip="Вставка гиперссылки" 
+                             x:FieldModifier="private" Click="AddHyperlink_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\hyperlink.png" />
+                </RadioButton>
+                <Separator/>
+                <RadioButton Name="AddAlphanumeric" ToolTip="Вставка значения" IsEnabled="False"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\alphanumeric.png" />
+                </RadioButton>
+                <RadioButton Name="AddCheckbox" ToolTip="Вставка поля выбора" Click="AddCheckbox_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\checkbox.png" />
+                </RadioButton>
+                <RadioButton Name="AddButton" ToolTip="Вставка кнопки" Click="AddButton_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\button.png" />
+                </RadioButton>
+                <RadioButton Name="AddCombobox" ToolTip="Вставка списка выбора" Click="AddCombobox_Click"
+                             x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\combobox.png" />
+                </RadioButton>
+                <Separator/>
+                <RadioButton Style="{StaticResource ToggleButton}" Name="AddImage" ToolTip="Вставка картинки из файла" IsEnabled="False"
+                             x:FieldModifier="private" Click="AddImage_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\image.png" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource ToggleButton}" Name="AddShape" ToolTip="Вставка готовой формы из файла" IsEnabled="False"
+                             x:FieldModifier="private" Click="AddShape_Click">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\shapelink.png" />
+                </RadioButton>
+            </ToolBar>
+        </ToolBarTray>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="3"/>
+            <local:DrawingPage Grid.Column="2" x:Name="DrawingSurface" MouseDoubleClick="DrawingSurface_MouseDoubleClick" />
+        </Grid>
+        <StatusBar Grid.Row="3" Height="30" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+            <Label Name="StatusLabel" x:FieldModifier="private" />
+        </StatusBar>
+        <ToolBarTray Grid.Row="4" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <ToolBar Height="Auto">
+                <Button Name="BringToFrontButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выдвинуть вперёд" Click="BringToFrontButton_Click"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\bringtofront.png"  />
+                </Button>
+                <Button Name="SendToBackButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Поместить назад" Click="SendToBackButton_Click"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\sendtoback.png"  />
+                </Button>
+                <Button Name="BringToUpButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Переместить наверх"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\bringup.png"  />
+                </Button>
+                <Button Name="SendToDownButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Переместить вниз"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\senddown.png"  />
+                </Button>
+                <Button Name="GroupingButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Сгруппировать" Click="GroupingButton_Click"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\group.png"  />
+                </Button>
+                <Button Name="UngroupingButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Разгруппировать" Click="UngroupingButton_Click"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\ungroup.png"  />
+                </Button>
+                <Button Name="AlignleftButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по левой границе"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\alignleft.png"  />
+                </Button>
+                <Button Name="AligncenterButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по центру"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\aligncenter.png"  />
+                </Button>
+                <Button Name="AlignrightButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по правой границе"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\alignright.png"  />
+                </Button>
+                <Button Name="AligntopButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по верхней границе"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\aligntop.png"  />
+                </Button>
+                <Button Name="AlignmiddleButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по середине"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\alignmiddle.png"  />
+                </Button>
+                <Button Name="AlignbottomButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по нижней границе"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\alignbottom.png"  />
+                </Button>
+                <Button Name="SamewidthButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по ширине"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\samewidth.png"  />
+                </Button>
+                <Button Name="SameheightButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по высоте"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\sameheight.png"  />
+                </Button>
+                <Button Name="SamebothButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять по размеру"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\sameboth.png"  />
+                </Button>
+                <Button Name="EvenlyhorButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять промежутки по ширине"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\evhor.png"  />
+                </Button>
+                <Button Name="EvenlyverButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Выровнять промежутки по высоте"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\evver.png"  />
+                </Button>
+                <Button Name="LockButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Блокировать/деблокировать"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\lock.png"  />
+                </Button>
+            </ToolBar>
+            <ToolBar Height="Auto">
+                <Button Name="FlipvertButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Отразить по вертикали"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\fliphor.png"  />
+                </Button>
+                <Button Name="FliphorizButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Отразить по горизонтали"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\flipver.png"  />
+                </Button>
+                <Button Name="RotateleftButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Повернуть влево на 90°"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\rotleft.png"  />
+                </Button>
+                <Button Name="RotaterightButton" IsEnabled="False" Style="{StaticResource InformButton}" ToolTip="Повернуть вправо на 90°"
+                        x:FieldModifier="private">
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" MaxHeight="16" Source="images\rotright.png"  />
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+    </Grid>
+</Window>
